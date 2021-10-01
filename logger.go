@@ -23,16 +23,16 @@ type Wrapper struct {
 }
 
 func (w Wrapper) Debug(msg string, args ...interface{}) {
-	w.Zap.With(...lazyFields).Debug(msg, convertToZapAny(args...)...)
+	w.Zap.With(lazyFields...).Debug(msg, convertToZapAny(args...)...)
 }
 func (w Wrapper) Info(msg string, args ...interface{}) {
-	w.Zap.With(...lazyFields).Info(msg, convertToZapAny(args...)...)
+	w.Zap.With(lazyFields...).Info(msg, convertToZapAny(args...)...)
 }
 func (w Wrapper) Warn(msg string, args ...interface{}) {
-	w.Zap.With(...lazyFields).Warn(msg, convertToZapAny(args...)...)
+	w.Zap.With(lazyFields...).Warn(msg, convertToZapAny(args...)...)
 }
 func (w Wrapper) Error(msg string, args ...interface{}) {
-	w.Zap.With(...lazyFields).Error(msg, convertToZapAny(args...)...)
+	w.Zap.With(lazyFields...).Error(msg, convertToZapAny(args...)...)
 }
 
 // Log logs messages with four simplified levels - Debug,Warn,Error and Info as a default.

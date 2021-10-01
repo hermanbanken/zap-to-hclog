@@ -9,29 +9,30 @@ import (
 )
 
 // Wrap simplifies wrapping zap instance to hclog.Logger interfacs.
-func Wrap(z *zap.Logger) hclog.Logger {
-	return Wrapper{Zap: z.WithOptions(zap.AddCallerSkip(2))}
+func Wrap(z *zap.Logger, lazyFields ...zap.Field) hclog.Logger {
+	return Wrapper{Zap: z.WithOptions(zap.AddCallerSkip(2)), lazyFields: lazyFields}
 }
 
 type Level = hclog.Level
 
 // Wrapper holds *zap.Logger and adapts its methods to declared by hclog.Logger.
 type Wrapper struct {
-	Zap  *zap.Logger
-	name string
+	Zap        *zap.Logger
+	name       string
+	lazyFields []zap.Field
 }
 
 func (w Wrapper) Debug(msg string, args ...interface{}) {
-	w.Zap.Debug(msg, convertToZapAny(args...)...)
+	w.Zap.With(...lazyFields).Debug(msg, convertToZapAny(args...)...)
 }
 func (w Wrapper) Info(msg string, args ...interface{}) {
-	w.Zap.Info(msg, convertToZapAny(args...)...)
+	w.Zap.With(...lazyFields).Info(msg, convertToZapAny(args...)...)
 }
 func (w Wrapper) Warn(msg string, args ...interface{}) {
-	w.Zap.Warn(msg, convertToZapAny(args...)...)
+	w.Zap.With(...lazyFields).Warn(msg, convertToZapAny(args...)...)
 }
 func (w Wrapper) Error(msg string, args ...interface{}) {
-	w.Zap.Error(msg, convertToZapAny(args...)...)
+	w.Zap.With(...lazyFields).Error(msg, convertToZapAny(args...)...)
 }
 
 // Log logs messages with four simplified levels - Debug,Warn,Error and Info as a default.
